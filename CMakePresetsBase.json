@@ -6,7 +6,9 @@
       "hidden": true,
       "binaryDir": "${sourceDir}/_bld-${presetName}",
       "cacheVariables": {
-        "JSON_BuildTests": "OFF"
+        "JSON_BuildTests": "OFF",
+        "NLOHMANN_JSON_CONFIG_INSTALL_DIR": "share/cmake",
+        "XP_NAMESPACE": "xpro"
       }
     }
   ]

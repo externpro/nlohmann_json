@@ -24,6 +24,7 @@ endif()
 ##
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(ExternalProject)
+include(flags) # externpro
 
 ##
 ## OPTIONS
@@ -191,14 +192,23 @@ configure_file(
 )
 
 if(JSON_Install)
+    if(DEFINED XP_NAMESPACE)
+        set(XP_INSTALL_CMAKEDIR ${NLOHMANN_JSON_CONFIG_INSTALL_DIR})
+        cmake_path(GET NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE STEM targetsFile)
+        xpPackageDevel(TARGETS_FILE ${targetsFile} LIBRARIES ${XP_NAMESPACE}::${NLOHMANN_JSON_TARGET_NAME})
+    else()
+        set(XP_NAMESPACE "${PROJECT_NAME}")
+    endif()
     install(
         DIRECTORY ${NLOHMANN_JSON_INCLUDE_BUILD_DIR}
         DESTINATION ${NLOHMANN_JSON_INCLUDE_INSTALL_DIR}
     )
+    if(NOT DEFINED XP_NAMESPACE)
     install(
         FILES ${NLOHMANN_JSON_CMAKE_PROJECT_CONFIG_FILE} ${NLOHMANN_JSON_CMAKE_VERSION_CONFIG_FILE}
         DESTINATION ${NLOHMANN_JSON_CONFIG_INSTALL_DIR}
     )
+    endif() # XP_NAMESPACE
     if (NLOHMANN_ADD_NATVIS)
         install(
             FILES ${NLOHMANN_NATVIS_FILE}
@@ -207,7 +217,7 @@ if(JSON_Install)
     endif()
     export(
         TARGETS ${NLOHMANN_JSON_TARGET_NAME}
-        NAMESPACE ${PROJECT_NAME}::
+        NAMESPACE ${XP_NAMESPACE}::
         FILE ${NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE}
     )
     install(
@@ -217,12 +227,14 @@ if(JSON_Install)
     )
     install(
         EXPORT ${NLOHMANN_JSON_TARGETS_EXPORT_NAME}
-        NAMESPACE ${PROJECT_NAME}::
+        NAMESPACE ${XP_NAMESPACE}::
         DESTINATION ${NLOHMANN_JSON_CONFIG_INSTALL_DIR}
     )
+    if(NOT DEFINED XP_NAMESPACE)
     install(
         FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
         DESTINATION ${NLOHMANN_JSON_PKGCONFIG_INSTALL_DIR}
     )
     include(CPack)
+    endif() # XP_NAMESPACE
 endif()
