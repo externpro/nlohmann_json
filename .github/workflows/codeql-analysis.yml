@@ -6,9 +6,6 @@ on:
       - develop
       - master
       - release/*
-  pull_request:
-  schedule:
-    - cron: '0 19 * * 1'
   workflow_dispatch:
   
 concurrency:

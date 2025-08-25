@@ -1,0 +1,15 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "config-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/_bld-${presetName}",
+      "cacheVariables": {
+        "JSON_BuildTests": "OFF",
+        "NLOHMANN_JSON_CONFIG_INSTALL_DIR": "share/cmake",
+        "XP_NAMESPACE": "xpro"
+      }
+    }
+  ]
+}

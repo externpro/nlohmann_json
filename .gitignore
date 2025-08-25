@@ -45,3 +45,8 @@ nlohmann_json.spdx
 
 # Bazel-related
 MODULE.bazel.lock
+
+# externpro
+.env
+_bld*/
+docker-compose.override.yml
