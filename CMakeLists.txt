@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.5...4.0)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.devcontainer/cmake)
-include(preproject)
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
 
 ##
 ## PROJECT
@@ -24,7 +23,6 @@ endif()
 ##
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(ExternalProject)
-include(flags) # externpro
 
 ##
 ## OPTIONS
