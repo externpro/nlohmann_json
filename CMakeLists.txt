@@ -81,28 +81,37 @@ else()
     message(STATUS "Using the single-header code from ${NLOHMANN_JSON_INCLUDE_BUILD_DIR}")
 endif()
 
+# Initialize empty list for compile definitions
+set(NLOHMANN_JSON_COMPILE_DEFINITIONS)
+
 if (NOT JSON_ImplicitConversions)
     message(STATUS "Implicit conversions are disabled (JSON_USE_IMPLICIT_CONVERSIONS=0)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_USE_IMPLICIT_CONVERSIONS=0")
 endif()
 
 if (JSON_DisableEnumSerialization)
     message(STATUS "Enum integer serialization is disabled (JSON_DISABLE_ENUM_SERIALIZATION=0)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_DISABLE_ENUM_SERIALIZATION=1")
 endif()
 
 if (JSON_LegacyDiscardedValueComparison)
     message(STATUS "Legacy discarded value comparison enabled (JSON_USE_LEGACY_DISCARDED_VALUE_COMPARISON=1)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_USE_LEGACY_DISCARDED_VALUE_COMPARISON=1")
 endif()
 
 if (JSON_Diagnostics)
     message(STATUS "Diagnostics enabled (JSON_DIAGNOSTICS=1)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_DIAGNOSTICS=1")
 endif()
 
 if (JSON_Diagnostic_Positions)
     message(STATUS "Diagnostic positions enabled (JSON_DIAGNOSTIC_POSITIONS=1)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_DIAGNOSTIC_POSITIONS=1")
 endif()
 
 if (NOT JSON_GlobalUDLs)
     message(STATUS "User-defined string literals are not put in the global namespace (JSON_USE_GLOBAL_UDLS=0)")
+    list(APPEND NLOHMANN_JSON_COMPILE_DEFINITIONS "JSON_USE_GLOBAL_UDLS=0")
 endif()
 
 if (JSON_SystemInclude)
@@ -121,16 +130,13 @@ else()
     target_compile_features(${NLOHMANN_JSON_TARGET_NAME} INTERFACE cxx_std_11)
 endif()
 
-target_compile_definitions(
-    ${NLOHMANN_JSON_TARGET_NAME}
-    INTERFACE
-    $<$<NOT:$<BOOL:${JSON_GlobalUDLs}>>:JSON_USE_GLOBAL_UDLS=0>
-    $<$<NOT:$<BOOL:${JSON_ImplicitConversions}>>:JSON_USE_IMPLICIT_CONVERSIONS=0>
-    $<$<BOOL:${JSON_DisableEnumSerialization}>:JSON_DISABLE_ENUM_SERIALIZATION=1>
-    $<$<BOOL:${JSON_Diagnostics}>:JSON_DIAGNOSTICS=1>
-    $<$<BOOL:${JSON_Diagnostic_Positions}>:JSON_DIAGNOSTIC_POSITIONS=1>
-    $<$<BOOL:${JSON_LegacyDiscardedValueComparison}>:JSON_USE_LEGACY_DISCARDED_VALUE_COMPARISON=1>
-)
+if(NLOHMANN_JSON_COMPILE_DEFINITIONS)
+    target_compile_definitions(
+        ${NLOHMANN_JSON_TARGET_NAME}
+        INTERFACE
+        ${NLOHMANN_JSON_COMPILE_DEFINITIONS}
+    )
+endif()
 
 target_include_directories(
     ${NLOHMANN_JSON_TARGET_NAME}
