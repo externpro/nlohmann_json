@@ -1,6 +1,4 @@
-cmake_minimum_required(VERSION 3.5...4.0)
-
-set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
+cmake_minimum_required(VERSION 3.5...4.3)
 
 ##
 ## PROJECT
@@ -190,20 +188,18 @@ configure_file(
 )
 
 if(JSON_Install)
-    if(DEFINED XP_NAMESPACE)
+    if(COMMAND xpExternPackage)
         set(CMAKE_INSTALL_CMAKEDIR ${NLOHMANN_JSON_CONFIG_INSTALL_DIR})
         cmake_path(GET NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE STEM targetsFile)
-        xpExternPackage(NAMESPACE ${XP_NAMESPACE} ALIAS_NAMESPACE ${PROJECT_NAME}
-          TARGETS_FILE ${targetsFile} LIBRARIES ${NLOHMANN_JSON_TARGET_NAME}
+        xpExternPackage(TARGETS_FILE ${targetsFile}
+          LIBRARIES ${NLOHMANN_JSON_TARGET_NAME} DEFAULT_TARGETS ${NLOHMANN_JSON_TARGET_NAME}
           BASE v${CMAKE_PROJECT_VERSION} XPDIFF "patch"
           WEB "https://json.nlohmann.me" UPSTREAM "github.com/nlohmann/json"
           DESC "JSON for Modern C++"
           LICENSE "[MIT](https://github.com/nlohmann/json/blob/develop/LICENSE.MIT 'MIT License')"
           )
-        set(CMAKE_NAMESPACE "${XP_NAMESPACE}")
         set(CMAKE_OPT_INSTALL FALSE)
     else()
-        set(CMAKE_NAMESPACE "${PROJECT_NAME}")
         set(CMAKE_OPT_INSTALL TRUE)
     endif()
     install(
@@ -224,7 +220,7 @@ if(JSON_Install)
     endif()
     export(
         TARGETS ${NLOHMANN_JSON_TARGET_NAME}
-        NAMESPACE ${CMAKE_NAMESPACE}::
+        NAMESPACE ${PROJECT_NAME}::
         FILE ${NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE}
     )
     install(
@@ -234,7 +230,7 @@ if(JSON_Install)
     )
     install(
         EXPORT ${NLOHMANN_JSON_TARGETS_EXPORT_NAME}
-        NAMESPACE ${CMAKE_NAMESPACE}::
+        NAMESPACE ${PROJECT_NAME}::
         DESTINATION ${NLOHMANN_JSON_CONFIG_INSTALL_DIR}
     )
     if(CMAKE_OPT_INSTALL)
