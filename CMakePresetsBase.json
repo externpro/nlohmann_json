@@ -8,7 +8,7 @@
       "cacheVariables": {
         "JSON_BuildTests": "OFF",
         "NLOHMANN_JSON_CONFIG_INSTALL_DIR": "share/cmake",
-        "XP_NAMESPACE": "xpro"
+        "CMAKE_EXPERIMENTAL_GENERATE_SBOM": "ca494ed3-b261-4205-a01f-603c95e4cae0"
       }
     }
   ],
